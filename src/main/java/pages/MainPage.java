@@ -15,9 +15,17 @@ public class MainPage {
     private final Button deletRegionWordButton;
     private final Button firstRegionInListButton;
     private final Button firstCityInListButton;
+    private final Button shopListButton;
+    private final Button searchButton;
+    private final Button startSearchButton;
+
+    private final Button catalogButton;
+
+
     private final TextBox regionTextBox;
     private final TextBox cityTextBox;
-    private final Button shopListButton;
+    private final TextBox searchTextBox;
+
 
 
     public MainPage(WebDriver browser) {
@@ -28,9 +36,14 @@ public class MainPage {
         firstRegionInListButton = new Button(browser.findElement(Locators.MainPage.FIRST_REGION_IN_LIST_BUTTON));
         firstCityInListButton = new Button(browser.findElement(Locators.MainPage.FIRST_CITY_IN_LIST_BUTTON));
         shopListButton = new Button(browser.findElement(Locators.MainPage.SHOP_LIST_BUTTON));
+        searchButton = new Button(browser.findElement(Locators.MainPage.SEARCH_BUTTON));
+        startSearchButton = new Button(browser.findElement(Locators.MainPage.START_SEARCH_BUTTON));
+
+        catalogButton = new Button(browser.findElement(Locators.MainPage.CATALOG_BUTTON));
 
         regionTextBox = new TextBox(browser.findElement(Locators.MainPage.REGION_TEXT_BOX));
         cityTextBox = new TextBox(browser.findElement(Locators.MainPage.CITY_TEXT_BOX));
+        searchTextBox = new TextBox(browser.findElement(Locators.MainPage.SEARCH_TEXT_BOX));
     }
 
     public ProductPage clickBuyButton() {
@@ -71,6 +84,26 @@ public class MainPage {
        return browser.findElement(Locators.MainPage.FIRST_SHOP_NAME_BLOCK).getText();
     }
 
+    public void clickSearchButton(){
+        searchButton.click();
+    }
+    public void enterWordToSearchTextBox(String word){
+        searchTextBox.enterWord(word);
+    }
+    public void clickStartSearchButton() {
+        startSearchButton.click();
+    }
+
+
+
+    public String getNameOfFirstProductInProductList(){
+       return browser.findElement(Locators.MainPage.NAME_OF_FIRST_PRODUCT_IN_PRODUCT_LIST).getText();
+    }
+
+    public CatalogPage clickGoodsCatalogButton(){
+        catalogButton.click();
+        return new CatalogPage(browser);
+    }
 
 
 
@@ -82,7 +115,6 @@ public class MainPage {
         }
 
         public CareerMenuPage clickCareerButton() {
-//            browser.until
             careerButton.click();
             return new CareerMenuPage(browser);
         }

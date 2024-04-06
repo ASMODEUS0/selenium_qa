@@ -1,21 +1,17 @@
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import pages.CareerFormPage;
-import pages.CareerMenuPage;
-import pages.MainPage;
-import pages.ProductPage;
+import pages.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
-//@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 public class SmokeTest {
 
 
     private WebDriver browser;
     private final Cookie STORE_COOKIE = new Cookie("store_id", "1904");
-
 
 
     @BeforeEach
@@ -26,9 +22,8 @@ public class SmokeTest {
     }
 
 
-
     @Test
-    public void testAddToBasket() throws InterruptedException {
+    public void testAddToBasket() {
 
 
         MainPage mainPage = new MainPage(browser);
@@ -40,19 +35,20 @@ public class SmokeTest {
         ProductPage.BasketPage basketPage = productPage.clickBasketButton();
         String countOfGoodsInBasket = basketPage.getCountOfGoodsInBasket();
 
-        Assertions.assertEquals(countOfGoodsInBasket, "Товары (\n" +
-                                                      "2\n" +
-                                                      ")");
+        assertEquals(countOfGoodsInBasket, """
+                Товары (
+                2
+                )""");
 
         browser.close();
     }
 
 
     @Test
-    public void testCareerMenu() throws InterruptedException {
+    public void testCareerMenu() {
 
 
-        try{
+        try {
             MainPage mainPage = new MainPage(browser);
 
             MainPage.SubMenu subMenu = mainPage.clickSubMenuButton();
@@ -64,10 +60,10 @@ public class SmokeTest {
             String formName = careerFormPage.getFormName();
 
             String expected = "Стань частью\n" +
-                            "большой команды!";
-            Assertions.assertEquals(expected.toLowerCase(), formName.toLowerCase());
+                              "большой команды!";
+            assertEquals(expected.toLowerCase(), formName.toLowerCase());
 
-        }finally {
+        } finally {
             browser.close();
 
         }
@@ -77,7 +73,7 @@ public class SmokeTest {
     @Test
     public void testToFindShopByEnterRegionAndCity() throws InterruptedException {
 
-        try{
+        try {
             Thread.sleep(1000);
             MainPage mainPage = new MainPage(browser);
             mainPage.clickDeleteRegionWordButton();
@@ -88,13 +84,47 @@ public class SmokeTest {
             mainPage.clikcShopListButton();
             String shopName = mainPage.getFirstShopName();
             String expected = "ш. Калужское, 56-й км, вл. 2, стр. 1";
-            Assertions.assertEquals(expected, shopName);
-        }finally {
+            assertEquals(expected, shopName);
+        } finally {
             browser.close();
         }
     }
 
+    @Test
+    public void testSearchProduct() {
 
+        try {
+            MainPage mainPage = new MainPage(browser);
+
+            mainPage.clickSearchButton();
+            mainPage.enterWordToSearchTextBox("Сметана");
+            mainPage.clickStartSearchButton();
+            String productName = mainPage.getNameOfFirstProductInProductList();
+            String expexted = "Сметана ''Брест-Литовская'', 15%, 300 г";
+            assertEquals(expexted, productName);
+        } finally {
+            browser.close();
+        }
+
+
+    }
+
+
+    @Test
+    public void testFiltering(){
+        try {
+            MainPage mainPage = new MainPage(browser);
+            CatalogPage catalogPage = mainPage.clickGoodsCatalogButton();
+            catalogPage.clickFilterMenuButton();
+            catalogPage.clickCoffeeTeaFilterButton();
+            String productName = catalogPage.getFirstProductInFilterList();
+
+            boolean contains = productName.toLowerCase().contains("чай");
+            assertTrue(contains);
+        } finally {
+            browser.close();
+        }
+    }
 
 
     //---
